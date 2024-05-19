@@ -1,20 +1,25 @@
 import sys
-from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QVBoxLayout, QMessageBox)
-                            # 어플리케이션 핸들러와 빈 GUI 위젯
+from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QVBoxLayout,
+                             QMessageBox, QPlainTextEdit) # 어플리케이션 핸들러와 빈 GUI 위젯
 from PyQt5.QtGui import QIcon    # 아이콘 사용을 위한 모듈
 
 
-class Calculator(QWidget): # QWidget을 상속받아 Calculator 클래스를 정의
+class Calculator(QWidget):  # QWidget을 상속받아 Calculator 클래스를 정의
 
     def __init__(self):
         super().__init__()  # 부모 클래스 초기화
         self.initUI()       # 나머지 초가화는 initUI() 메서드에서 처리
 
     def initUI(self):
-        self.btn1= QPushButton('Message', self)             # 버튼 추가
+
+        self.te1 = QPlainTextEdit()  # 텍스트 편집기 생성
+        self.te1.setReadOnly(True)  # 편집 불가능하게 설정
+
+        self.btn1 = QPushButton('Message', self)             # 버튼 추가
         self.btn1.clicked.connect(self.activateMessage)     # 버튼 클릭 시 핸들러 함수 연결
 
         vbox= QVBoxLayout()         # 수직 박스 레이아웃 생성
+        vbox.addWidget(self.te1)    # 텍스트 편집기를 레이아웃에 추가
         vbox.addStretch(1)          # 레이아웃을 위젯에 추가, 빈공간
         vbox.addWidget(self.btn1)   # 버튼을 레이아웃에 추가
         vbox.addStretch(1)          # 레이아웃을 위젯에 추가, 빈공간
@@ -26,8 +31,9 @@ class Calculator(QWidget): # QWidget을 상속받아 Calculator 클래스를 정
         self.resize(256, 256)                   # 위젯의 크기를 300x200으로 조절
         self.show()                             # 위젯을 화면에 표시
 
-    def activateMessage(self):                  # 버튼 클릭 시 호출되는 메서드
-        QMessageBox.information(self, 'information', 'Button Clicked')
+    def activateMessage(self):                      # 버튼 클릭 시 호출되는 메서드
+        self.te1.appendPlainText('Button Clicked')  # 메세지가 텍스트 에디트에 출력되도록 수정
+        # QMessageBox.information(self, 'information', 'Button Clicked')
 
 
 if __name__ == '__main__':              # pyqt는 애플리케이션당 하나의 QApplication 객체만을 생성할 수 있음
