@@ -7,3 +7,6 @@ def get_bitcoin_price():
     data = response.json()
     return data[0]['trade_price']
 
+def printhkm():
+    print("hello")
+
