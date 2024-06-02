@@ -27,3 +27,5 @@
 # 3. git push를 입력한다.
 # 4. username과 password를 입력한다.
 # 5. 다음부터는 username과 password를 입력하지 않아도 된다.
+
+# 만일 위의 2.번항을 store로 지정안하면 어떻게 되는지 알아보자.
