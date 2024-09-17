@@ -1,3 +1,5 @@
+# 원하는 지수를 조회하여 출력하는 루틴
+
 import time
 import os
 import sys

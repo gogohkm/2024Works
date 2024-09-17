@@ -1,3 +1,5 @@
+# 자동 매수 프로그램
+
 import time
 import os
 import sys
@@ -16,9 +18,8 @@ from module import upbit
 # - Desc : 매수 로직
 # - Input
 # 1) buy_amt : 매수금액
-# 2) except_items : 매수 제외종목
 # -----------------------------------------------------------------------------
-def start_buytrade(buy_amt, except_items):
+def start_buytrade(buy_amt):
     try:
 
         # ----------------------------------------------------------------------
@@ -29,14 +30,16 @@ def start_buytrade(buy_amt, except_items):
             logging.info("*********************************************************")
             logging.info("1. 로그레벨 : " + str(log_level))
             logging.info("2. 매수금액 : " + str(buy_amt))
-            logging.info("3. 매수 제외종목 : " + str(except_items))
             logging.info("*********************************************************")
 
-            # ------------------------------------------------------------------
-            # 매수 제외종목을 제외한 종목 리스트 추출
-            # ------------------------------------------------------------------
-            target_items = upbit.get_items('KRW', except_items)
+            # -----------------------------------------------------------------
+            # 전체 종목 리스트 추출
+            # -----------------------------------------------------------------
+            target_items = upbit.get_items('KRW', '')
 
+            # -----------------------------------------------------------------
+            # 종목별 체크
+            # -----------------------------------------------------------------
             for target_item in target_items:
 
                 rsi_val = False
@@ -45,18 +48,28 @@ def start_buytrade(buy_amt, except_items):
 
                 logging.info('체크중....[' + str(target_item['market']) + ']')
 
-                # --------------------------------------------------------------
+                # -------------------------------------------------------------
                 # 종목별 보조지표를 조회
                 # 1. 조회 기준 : 일캔들, 최근 5개 지표 조회
-                # --------------------------------------------------------------
-                indicators_data = upbit.get_indicators(target_item['market'], 'D', 200, 5)
+                # 2. 속도를 위해 원하는 지표만 조회(RSI, MFI, MACD, CANDLE)
+                # -------------------------------------------------------------
+                indicators = upbit.get_indicator_sel(target_item['market'], 'D', 200, 5,
+                                                     ['RSI', 'MFI', 'MACD', 'CANDLE'])
 
                 # --------------------------------------------------------------
-                # 최근 30일 이내에 신규 상장하여 보조 지표를 구하기 어려운 건은 제외
+                # 최근 상장하여 캔들 갯수 부족으로 보조 지표를 구하기 어려운 건은 제외
                 # --------------------------------------------------------------
-                if len(indicators_data) < 5:
-                    logging.info('캔들 데이터 부족으로 매수 대상에서 제외....[' + str(target_item['market']) + ']')
+                if 'CANDLE' not in indicators or len(indicators['CANDLE']) < 200:
+                    logging.info('캔들 데이터 부족으로 데이터 산출 불가...[' + str(target_item['market']) + ']')
                     continue
+
+                # --------------------------------------------------------------
+                # 보조 지표 추출
+                # --------------------------------------------------------------
+                rsi = indicators['RSI']
+                mfi = indicators['MFI']
+                macd = indicators['MACD']
+                candle = indicators['CANDLE']
 
                 # --------------------------------------------------------------
                 # 매수 로직
@@ -67,43 +80,40 @@ def start_buytrade(buy_amt, except_items):
 
                 # --------------------------------------------------------------
                 # RSI : 2일전 < 30미만, 3일전 > 2일전, 1일전 > 2일전, 현재 > 1일전
-                # indicators_data[0][0]['RSI'] : 현재
-                # indicators_data[0][1]['RSI'] : 1일전
-                # indicators_data[0][2]['RSI'] : 2일전
-                # indicators_data[0][3]['RSI'] : 3일전
+                # rsi[0]['RSI'] : 현재
+                # rsi[1]['RSI'] : 1일전
+                # rsi[2]['RSI'] : 2일전
+                # rsi[3]['RSI'] : 3일전
                 # --------------------------------------------------------------
-                if (Decimal(str(indicators_data[0][0]['RSI'])) > Decimal(str(indicators_data[0][1]['RSI']))
-                        and Decimal(str(indicators_data[0][1]['RSI'])) > Decimal(str(indicators_data[0][2]['RSI']))
-                        and Decimal(str(indicators_data[0][3]['RSI'])) > Decimal(str(indicators_data[0][2]['RSI']))
-                        and Decimal(str(indicators_data[0][2]['RSI'])) < Decimal(str(30))):
+                if (Decimal(str(rsi[0]['RSI'])) > Decimal(str(rsi[1]['RSI'])) > Decimal(str(rsi[2]['RSI']))
+                        and Decimal(str(rsi[3]['RSI'])) > Decimal(str(rsi[2]['RSI']))
+                        and Decimal(str(rsi[2]['RSI'])) < Decimal(str(30))):
                     rsi_val = True
 
                 # --------------------------------------------------------------
                 # MFI : 2일전 < 20미만, 3일전 > 2일전, 1일전 > 2일전, 현재 > 1일전
-                # indicators_data[1][0]['MFI'] : 현재
-                # indicators_data[1][1]['MFI'] : 1일전
-                # indicators_data[1][2]['MFI'] : 2일전
-                # indicators_data[1][3]['MFI'] : 3일전
+                # mfi[0]['MFI'] : 현재
+                # mfi[1]['MFI'] : 1일전
+                # mfi[2]['MFI'] : 2일전
+                # mfi[3]['MFI'] : 3일전
                 # --------------------------------------------------------------
-                if (Decimal(str(indicators_data[1][0]['MFI'])) > Decimal(str(indicators_data[1][1]['MFI']))
-                        and Decimal(str(indicators_data[1][1]['MFI'])) > Decimal(str(indicators_data[1][2]['MFI']))
-                        and Decimal(str(indicators_data[1][3]['MFI'])) > Decimal(str(indicators_data[1][2]['MFI']))
-                        and Decimal(str(indicators_data[1][2]['MFI'])) < Decimal(str(20))):
+                if (Decimal(str(mfi[0]['MFI'])) > Decimal(str(mfi[1]['MFI'])) > Decimal(str(mfi[2]['MFI']))
+                        and Decimal(str(mfi[3]['MFI'])) > Decimal(str(mfi[2]['MFI']))
+                        and Decimal(str(mfi[2]['MFI'])) < Decimal(str(20))):
                     mfi_val = True
 
                 # --------------------------------------------------------------
                 # MACD(OCL) : 3일전 < 0, 2일전 < 0, 1일전 < 0, 3일전 > 2일전, 1일전 > 2일전, 현재 > 1일전
-                # indicators_data[2][0]['OCL'] : 현재
-                # indicators_data[2][1]['OCL'] : 1일전
-                # indicators_data[2][2]['OCL'] : 2일전
-                # indicators_data[2][3]['OCL'] : 3일전
+                # macd[0]['OCL'] : 현재
+                # macd[1]['OCL'] : 1일전
+                # macd[2]['OCL'] : 2일전
+                # macd[3]['OCL'] : 3일전
                 # --------------------------------------------------------------
-                if (Decimal(str(indicators_data[2][0]['OCL'])) > Decimal(str(indicators_data[2][1]['OCL']))
-                        and Decimal(str(indicators_data[2][1]['OCL'])) > Decimal(str(indicators_data[2][2]['OCL']))
-                        and Decimal(str(indicators_data[2][3]['OCL'])) > Decimal(str(indicators_data[2][2]['OCL']))
-                        and Decimal(str(indicators_data[2][1]['OCL'])) < Decimal(str(0))
-                        and Decimal(str(indicators_data[2][2]['OCL'])) < Decimal(str(0))
-                        and Decimal(str(indicators_data[2][3]['OCL'])) < Decimal(str(0))):
+                if (Decimal(str(macd[0]['OCL'])) > Decimal(str(macd[1]['OCL'])) > Decimal(str(macd[2]['OCL']))
+                        and Decimal(str(macd[3]['OCL'])) > Decimal(str(macd[2]['OCL']))
+                        and Decimal(str(macd[1]['OCL'])) < Decimal(str(0))
+                        and Decimal(str(macd[2]['OCL'])) < Decimal(str(0))
+                        and Decimal(str(macd[3]['OCL'])) < Decimal(str(0))):
                     ocl_val = True
 
                 # --------------------------------------------------------------
@@ -111,9 +121,21 @@ def start_buytrade(buy_amt, except_items):
                 # --------------------------------------------------------------
                 if rsi_val and mfi_val and ocl_val:
                     logging.info('매수대상 발견....[' + str(target_item['market']) + ']')
-                    logging.info(indicators_data[0])
-                    logging.info(indicators_data[1])
-                    logging.info(indicators_data[2])
+                    logging.info('RSI : ' + str(rsi))
+                    logging.info('MFI : ' + str(mfi))
+                    logging.info('MACD : ' + str(macd))
+
+                    # ------------------------------------------------------------------
+                    # 기매수 여부 판단
+                    # ------------------------------------------------------------------
+                    accounts = upbit.get_accounts('Y', 'KRW')
+                    account = list(filter(lambda x: x.get('market') == target_item['market'], accounts))
+
+                    # 이미 매수한 종목이면 다시 매수하지 않음
+                    # sell_bot.py에서 매도 처리되면 보유 종목에서 사라지고 다시 매수 가능
+                    if len(account) > 0:
+                        logging.info('기 매수 종목으로 매수하지 않음....[' + str(target_item['market']) + ']')
+                        continue
 
                     # ------------------------------------------------------------------
                     # 매수금액 설정
@@ -149,14 +171,6 @@ def start_buytrade(buy_amt, except_items):
                     logging.info('시장가 매수 종료! [' + str(target_item['market']) + ']')
                     # logging.info(rtn_buycoin_mp)
 
-                    # ------------------------------------------------------------------
-                    # 매수 완료 종목은 매수 대상에서 제외
-                    # ------------------------------------------------------------------
-                    if except_items.strip():
-                        except_items = except_items + ',' + target_item['market'].split('-')[1]
-                    else:
-                        except_items = target_item['market'].split('-')[1]
-
     # ---------------------------------------
     # 모든 함수의 공통 부분(Exception 처리)
     # ----------------------------------------
@@ -190,19 +204,16 @@ if __name__ == '__main__':
         # 1. 로그레벨
         log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
         buy_amt = input("매수금액(M:최대, 10000:1만원) : ").upper()
-        except_items = input("매수 제외종목(종목코드, ex:BTC,ETH) : ").upper()
 
         upbit.set_loglevel(log_level)
 
         logging.info("*********************************************************")
         logging.info("1. 로그레벨 : " + str(log_level))
         logging.info("2. 매수금액 : " + str(buy_amt))
-        logging.info("3. 매수 제외종목 : " + str(except_items))
         logging.info("*********************************************************")
 
         # 매수 로직 시작
-        start_buytrade(buy_amt, except_items)
-
+        start_buytrade(buy_amt)
 
     except KeyboardInterrupt:
         logging.error("KeyboardInterrupt Exception 발생!")
