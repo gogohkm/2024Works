@@ -1,3 +1,5 @@
+# 조건에 맞으면 파는 루틴
+
 import time
 import os
 import sys
