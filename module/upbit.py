@@ -8,6 +8,7 @@ import numpy
 import hashlib
 import logging
 import requests
+# 아래 telegram을 import하려면 pip install python-telegram-bot 설치 필요
 import telegram
 import pandas as pd
 
