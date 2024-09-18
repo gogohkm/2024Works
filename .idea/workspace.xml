@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="061f93c6-3b59-475f-9f3b-f20aa8c9cfb4" name="변경" comment="코드 초기세팅04&#10;텔레그램 메신저 아이디 토큰 등록">
-      <change afterPath="$PROJECT_DIR$/module/UseTelegram.py" afterDir="false" />
+    <list default="true" id="061f93c6-3b59-475f-9f3b-f20aa8c9cfb4" name="변경" comment="코드 초기세팅06&#10;Sample디렉토리로 예제옮김">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -60,6 +59,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Code_Work\UTrade_V01\Sample" />
       <recent name="C:\Code_Work\UTrade_V01" />
     </key>
   </component>
@@ -143,7 +143,31 @@
       <option name="project" value="LOCAL" />
       <updated>1726588144314</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="코드 초기세팅05&#10;텔레그램 메시지를 보낼수 있도록 예제 추가">
+      <option name="closed" value="true" />
+      <created>1726592092159</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1726592092159</updated>
+    </task>
+    <task id="LOCAL-00007" summary="코드 초기세팅05&#10;텔레그램 메시지를 보낼수 있도록 예제 추가">
+      <option name="closed" value="true" />
+      <created>1726592134881</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1726592134881</updated>
+    </task>
+    <task id="LOCAL-00008" summary="코드 초기세팅06&#10;Sample디렉토리로 예제옮김">
+      <option name="closed" value="true" />
+      <created>1726592232517</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1726592232517</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -173,7 +197,9 @@
     <MESSAGE value="코드 초기세팅" />
     <MESSAGE value="코드 초기세팅02" />
     <MESSAGE value="코드 초기세팅04&#10;텔레그램 메신저 아이디 토큰 등록" />
-    <option name="LAST_COMMIT_MESSAGE" value="코드 초기세팅04&#10;텔레그램 메신저 아이디 토큰 등록" />
+    <MESSAGE value="코드 초기세팅05&#10;텔레그램 메시지를 보낼수 있도록 예제 추가" />
+    <MESSAGE value="코드 초기세팅06&#10;Sample디렉토리로 예제옮김" />
+    <option name="LAST_COMMIT_MESSAGE" value="코드 초기세팅06&#10;Sample디렉토리로 예제옮김" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
