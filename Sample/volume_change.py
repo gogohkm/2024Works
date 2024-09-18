@@ -1,3 +1,5 @@
+# 특정종목에 대해 거래량을 구하고 이를 출력하는 코드
+
 import requests
 import pandas as pd
 import matplotlib.pyplot as plt

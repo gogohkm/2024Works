@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="061f93c6-3b59-475f-9f3b-f20aa8c9cfb4" name="변경" comment="코드 초기세팅06&#10;Sample디렉토리로 예제옮김">
+      <change afterPath="$PROJECT_DIR$/Sample/volume_change.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
