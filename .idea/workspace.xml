@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="061f93c6-3b59-475f-9f3b-f20aa8c9cfb4" name="변경" comment="코드 초기세팅06&#10;Sample디렉토리로 예제옮김">
-      <change afterPath="$PROJECT_DIR$/Sample/hoga.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sample/volumeSelect.py" afterDir="false" />
+    <list default="true" id="061f93c6-3b59-475f-9f3b-f20aa8c9cfb4" name="변경" comment="코드 수집 01">
+      <change afterPath="$PROJECT_DIR$/Sample/VolumeSelect2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -169,7 +168,15 @@
       <option name="project" value="LOCAL" />
       <updated>1726592232517</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="코드 수집 01">
+      <option name="closed" value="true" />
+      <created>1726987459772</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1726987459772</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -201,7 +208,8 @@
     <MESSAGE value="코드 초기세팅04&#10;텔레그램 메신저 아이디 토큰 등록" />
     <MESSAGE value="코드 초기세팅05&#10;텔레그램 메시지를 보낼수 있도록 예제 추가" />
     <MESSAGE value="코드 초기세팅06&#10;Sample디렉토리로 예제옮김" />
-    <option name="LAST_COMMIT_MESSAGE" value="코드 초기세팅06&#10;Sample디렉토리로 예제옮김" />
+    <MESSAGE value="코드 수집 01" />
+    <option name="LAST_COMMIT_MESSAGE" value="코드 수집 01" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
