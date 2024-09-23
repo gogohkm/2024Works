@@ -1,3 +1,5 @@
+# 업비트에서 매도누적수량- 매수누적수량을 계산하고 3차 다항식으로 근사하는 예제
+
 import requests
 import time
 import matplotlib.pyplot as plt
