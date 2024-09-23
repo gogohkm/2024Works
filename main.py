@@ -1,104 +1,61 @@
-# 가장 거래량이 높은 3개의 종목을 병령처리로 찾는다.
-
 import requests
-import pandas as pd
-from time import sleep
-from concurrent.futures import ThreadPoolExecutor, as_completed
+import time
+import matplotlib.pyplot as plt
+from collections import deque
+import matplotlib.font_manager as fm
+
+# 한글 폰트를 '굴림'으로 설정하는 함수
+def set_korean_font():
+    plt.rc('font', family='Gulim')  # 굴림체를 설정
 
 
-# 업비트 마켓 코드 가져오기
-def get_market_codes():
-    url = "https://api.upbit.com/v1/market/all"
-    try:
-        response = requests.get(url)
-        response.raise_for_status()  # HTTP 에러 발생 시 예외 처리
-        markets = response.json()
-        return [market['market'] for market in markets if market['market'].startswith('KRW')]
-    except requests.exceptions.HTTPError as errh:
-        print(f"HTTP Error: {errh}")
-    except requests.exceptions.ConnectionError as errc:
-        print(f"Error Connecting: {errc}")
-    except requests.exceptions.Timeout as errt:
-        print(f"Timeout Error: {errt}")
-    except requests.exceptions.RequestException as err:
-        print(f"Oops: Something Else: {err}")
-    return []
+# 업비트 API에서 호가 정보를 가져오는 함수
+def get_orderbook(market="KRW-BTC"):
+    url = f"https://api.upbit.com/v1/orderbook?markets={market}"
+    headers = {"Accept": "application/json"}
+
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return response.json()[0]
+    else:
+        print("API 호출 오류:", response.status_code)
+        return None
 
 
-# 최근 10분 동안의 캔들 데이터 가져오기 (거래금액으로 평가)
-def get_recent_10_min_data(market):
-    url = f"https://api.upbit.com/v1/candles/minutes/1"
-    params = {
-        'market': market,
-        'count': 2  # 1분 단위로 2개의 데이터를 가져옴
-    }
+# 총 매도호가와 총 매수호가를 계산하는 함수
+def calculate_order_totals(orderbook):
+    total_ask = sum([order['ask_size'] for order in orderbook['orderbook_units']])
+    total_bid = sum([order['bid_size'] for order in orderbook['orderbook_units']])
+    return total_ask, total_bid
+
+
+# 실시간으로 "총매도호가 - 총매수호가" 값을 그래프로 표시하는 함수
+def plot_real_time_diff():
+    # 데이터를 저장할 덱(Deque) 생성
+    diff_history = deque(maxlen=50)  # 최근 50개의 데이터만 저장
+
+    plt.ion()  # 인터랙티브 모드 켜기
+    fig, ax = plt.subplots()
+
+    set_korean_font()  # 한글 폰트 설정
 
     while True:
-        try:
-            response = requests.get(url, params=params)
-            if response.status_code == 429:
-                print(f"Rate limit exceeded for {market}. Retrying after a short delay...")
-                sleep(1)  # 1초 대기 후 다시 시도
-                continue
-            response.raise_for_status()  # HTTP 에러 발생 시 예외 처리
-            return response.json()
-        except requests.exceptions.HTTPError as errh:
-            print(f"HTTP Error: {errh}")
-            break
-        except requests.exceptions.ConnectionError as errc:
-            print(f"Error Connecting: {errc}")
-            break
-        except requests.exceptions.Timeout as errt:
-            print(f"Timeout Error: {errt}")
-            break
-        except requests.exceptions.RequestException as err:
-            print(f"Oops: Something Else: {err}")
-            break
-    return []
+        orderbook = get_orderbook("KRW-BTC")
+        if orderbook:
+            total_ask, total_bid = calculate_order_totals(orderbook)
+            diff = total_ask - total_bid  # 총매도호가 - 총매수호가
+            diff_history.append(diff)
+
+            # 그래프 업데이트
+            ax.clear()
+            ax.plot(diff_history, label='총매도호가 - 총매수호가')
+            ax.set_xlabel('시간')
+            ax.set_ylabel('호가 차이')
+            ax.set_title('총매도호가 - 총매수호가 실시간 그래프')
+            ax.legend()
+
+            plt.pause(1)  # 1초 대기 후 업데이트
 
 
-# 거래금액이 가장 많은 3개의 종목 찾기 (병렬 처리)
-def get_top_3_highest_trade_price():
-    markets = get_market_codes()
-    if not markets:
-        print("No market data retrieved.")
-        return None
-
-    trade_price_data = []
-
-    # 병렬 처리로 각 마켓의 데이터를 가져옴
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        # 각 시장에 대해 API 요청을 병렬로 실행
-        future_to_market = {executor.submit(get_recent_10_min_data, market): market for market in markets}
-
-        for future in as_completed(future_to_market):
-            market = future_to_market[future]
-            try:
-                candle_data = future.result()
-                if not candle_data:
-                    continue
-
-                # 10분간의 거래금액 (candle_acc_trade_price)을 합산
-                total_trade_price = sum([candle['candle_acc_trade_price'] for candle in candle_data])
-                trade_price_data.append({
-                    'market': market,
-                    'total_trade_price': total_trade_price
-                })
-            except Exception as exc:
-                print(f"Market {market} generated an exception: {exc}")
-
-    # 거래금액 순으로 정렬하여 상위 3개 종목 추출
-    if not trade_price_data:  # 데이터가 없는 경우 처리
-        print("No trade price data found.")
-        return None
-
-    df = pd.DataFrame(trade_price_data)
-    top_3 = df.nlargest(3, 'total_trade_price')
-
-    return top_3
-
-
-# 결과 출력
-top_3_markets = get_top_3_highest_trade_price()
-if top_3_markets is not None:
-    print(top_3_markets)
+if __name__ == "__main__":
+    plot_real_time_diff()
