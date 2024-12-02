@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="061f93c6-3b59-475f-9f3b-f20aa8c9cfb4" name="변경" comment="코드 수집 01">
+    <list default="true" id="061f93c6-3b59-475f-9f3b-f20aa8c9cfb4" name="변경" comment="코드 수집 02-1018">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -90,7 +90,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-884f5ed5d46b-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.22855.92" />
+        <option value="bundled-python-sdk-0e3be3396995-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.23339.19" />
       </set>
     </attachedChunks>
   </component>
@@ -199,7 +199,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727106010690</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="코드 수집 02-1018">
+      <option name="closed" value="true" />
+      <created>1729219066380</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1729219066380</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -232,7 +240,8 @@
     <MESSAGE value="코드 초기세팅05&#10;텔레그램 메시지를 보낼수 있도록 예제 추가" />
     <MESSAGE value="코드 초기세팅06&#10;Sample디렉토리로 예제옮김" />
     <MESSAGE value="코드 수집 01" />
-    <option name="LAST_COMMIT_MESSAGE" value="코드 수집 01" />
+    <MESSAGE value="코드 수집 02-1018" />
+    <option name="LAST_COMMIT_MESSAGE" value="코드 수집 02-1018" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
